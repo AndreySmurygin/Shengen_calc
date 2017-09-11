@@ -2,7 +2,28 @@
 #свободных дней для соблюдения требований иммиграционного закона.
 #
 #шаг первый - приветствуем пользователя и выводим меню его действий
-print("Привет, джедай! Калькулятор шенгенских виз тебя приветствует!")
+print("Да прибудет с нами сила, джедай! Тебя виз шенгенских калькулятор приветствует!")
 print()
-print("Выбери, что надо сделать:")
-print_base_menu()
+
+choice = 'a' #инициация переменной хранения выбора клиента
+
+while choice<>'e' :
+   print("Что надо сделать, выбери ты:")
+   choice = print_base_menu() #выбор клиента сохраяем в choice
+
+   if choice = 'n' : 
+     if get_new_trip_in_table(new_trip): 
+          print("Успешно данные о новой поездке получены!")
+          triptable = safe_new_trip(triptable, new_trip)
+          result = make_calculation(trip_table)
+          if result<>-1 :  print(result)
+     else print("Неуспешно данные о новой поездке получены :(")
+   elif choice = 'd' : 
+          result = make_calculation(trip_table)
+          if result<>-1 :
+               print("Успешно расчет ваших поездок выполнен!")
+               print(result)
+          else: print("Неуспешно расчет ваших поездок выполнен!")
+       
+  
+   
