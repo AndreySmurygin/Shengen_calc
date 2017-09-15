@@ -1,45 +1,96 @@
 #Программа решает задачу учета планируемых поездок в Шенген, расчета количества дней и сообщает достаточно ли
 #свободных дней для соблюдения требований иммиграционного закона.
 #
+
 #РАЗДЕЛ ОПРЕДЕЛЕНИЯ ФУНКЦИЙ
+
 #функция получающая новую поездку, проверяющая корректность и записывающая её в trip_table
-def get_new_trip_in_table(trip_table)
-return False
+def get_new_trip_in_table(triplist):
+  #получаем от пользователя и записываем в список даты поездок
+  print('Укажите номер дня въезда в шенгенскую зону')
+  data_arriving = int(input())
+  print('Укажите номер дня выезда из шенгенскуой зоны')
+  data_leave = int(input())
+  #выполняем проверку указанных дат въезда и выезда
+  error_code = 0
+  if data_arriving<=data_leave : #если выезд не раньше въезда, проверяем непересечение с более ранними поездками
+    for current_trip in triplist: #просматриваем по очереди все сохраненные поездки
+      if data_arriving<=current_trip[0] or data_arriving<=current_trip[1]: 
+        error_code = 1
+        print()
+        print('Обнаружено пересечение поездок!')
+        print()
+    if error_code==0 :
+      trip = [data_arriving,data_leave]
+      triplist.append(trip)
+      print()
+      print('Даты введены корректно и добавлены в список поездок.')
+      print(triplist)
+      return True
+  else :
+    print()
+    print('Даты введены некорректно! Они не добавлены в список поездок!')
+    return False
 
 #функция производящая расчет по таблице поездок по критериям шенгеской визы
-def make_calculation(trip_table)
-return -1
+def make_calculation(triplist):
+  #находим дату окончания 180-дневного сроке после первого въезда
+  data_number_of_shengen_constaint = triplist[0][0] + 180 #номер даты окончания срока 180 дней
+  number_of_days = 0 #инициация счетчика дней, проведенных в ЕС
+
+
+  for current_trip in triplist: 
+         if current_trip[0] < data_number_of_shengen_constaint :
+             if current_trip[1] < data_number_of_shengen_constaint :
+                 number_of_days = number_of_days + current_trip[1] - current_trip[0] + 1
+             else :
+                 number_of_days = number_of_days + data_number_of_shengen_constaint - current_trip[0] + 1
+                 
+  print()
+  print("Количество дней в ЕС за период составляет ", number_of_days," дней") 
+  return number_of_days
+  
+#функция опроса пользователя для выбора дальнейших действий
+def print_base_menu():
+  print()
+  print('-------------------------------------------')
+  print('Вы можете выбрать варианты действий, указав:')
+  print('e (латиница) - завершение работы')
+  print('n (латиница) - добавить поездку в список поездок')
+  print('d (латиница) - выполнить расчет калькулятора поездок')
+  return input()
 
 #шаг первый - приветствуем пользователя и выводим меню его действий
 print("Да прибудет с нами сила, джедай! Тебя виз шенгенских калькулятор приветствует!")
 print()
 
 choice = 'a' #инициация переменной хранения выбора клиента
+trip_table = []
 
 #далее обработка идет в цикле выбора действий пользователя до момента выбора завершения работы
 #в этом случае завершается и цикл, и работа программы
 
-while choice<>'e' :
-   print("Что надо сделать, выбери ты:")
+while choice!='e' :
+   
    choice = print_base_menu() #выбор клиента сохраяем в choice
 
-   if choice = 'n' : 
+   if choice == 'n' : 
      if get_new_trip_in_table(trip_table): #get_new_trip_in_table возвращает True or False и изменяет trip_table
-          
-          print("Успешно данные о новой поездке получены!")
+          print()
+          #print("Успешно данные о новой поездке получены! Проверим это:")
+          #print(trip_table)
           result = make_calculation(trip_table)
-          if result<>-1 :  print(result)
+          if result!=-1 :  print(result)
           else: print("Неуспешно расчет ваших поездок выполнен!")
           
      else: print("Неуспешно данные о новой поездке получены :(")
      
-   elif choice = 'd' : 
+   elif choice == 'd' : 
           result = make_calculation(trip_table)
-          if result<>-1 :
-               print("Успешно расчет ваших поездок выполнен!")
-               print(result)
-          else: print("Неуспешно расчет ваших поездок выполнен!")
+          if result==-1 : print("Неуспешно расчет ваших поездок выполнен!")
+               
 #цикл завершен
+print('')
 print('Благодарим за работу с программой!')
   
    
